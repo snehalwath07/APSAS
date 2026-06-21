@@ -1,0 +1,299 @@
+[2026-06-20 11:07:10] TO: test_citizen@apsas.city | SUBJECT: Incident Report Submitted - INC-9
+Hello Test Citizen,
+
+Your incident report has been received and stored in our database.
+
+Case Details:
+- Incident ID: INC-9
+- Category: Fire
+- Location: (24.58, 78.91)
+- Severity (AI Scored): HIGH
+- Status: SUBMITTED (in queue)
+
+Our dispatch operators have been alerted and will assign response teams shortly.
+================================================================================
+
+[2026-06-20 11:07:10] TO: operator@apsas.city | SUBJECT: APSAS HIGH PRIORITY ALERT - New Incident INC-9
+Hello Operator Marcus Vale,
+
+A CRITICAL/HIGH severity incident has been reported:
+- Case ID: INC-9
+- Category: Fire
+- Coordinates: (24.58, 78.91)
+- Details: Kitchen fire on 4th floor
+
+Please proceed to your dashboard immediately to assign a response team.
+================================================================================
+
+[2026-06-20 11:07:10] TO: hacker@apsas.city | SUBJECT: APSAS HIGH PRIORITY ALERT - New Incident INC-9
+Hello Operator Privilege Escalator,
+
+A CRITICAL/HIGH severity incident has been reported:
+- Case ID: INC-9
+- Category: Fire
+- Coordinates: (24.58, 78.91)
+- Details: Kitchen fire on 4th floor
+
+Please proceed to your dashboard immediately to assign a response team.
+================================================================================
+
+[2026-06-20 11:07:10] TO: test_operator@apsas.city | SUBJECT: APSAS HIGH PRIORITY ALERT - New Incident INC-9
+Hello Operator Test Operator,
+
+A CRITICAL/HIGH severity incident has been reported:
+- Case ID: INC-9
+- Category: Fire
+- Coordinates: (24.58, 78.91)
+- Details: Kitchen fire on 4th floor
+
+Please proceed to your dashboard immediately to assign a response team.
+================================================================================
+
+[2026-06-20 11:08:00] TO: test_citizen@apsas.city | SUBJECT: Incident Report Submitted - INC-10
+Hello Test Citizen,
+
+Your incident report has been received and stored in our database.
+
+Case Details:
+- Incident ID: INC-10
+- Category: Fire
+- Location: (24.58, 78.91)
+- Severity (AI Scored): HIGH
+- Status: SUBMITTED (in queue)
+
+Our dispatch operators have been alerted and will assign response teams shortly.
+================================================================================
+
+[2026-06-20 11:08:00] TO: operator@apsas.city | SUBJECT: APSAS HIGH PRIORITY ALERT - New Incident INC-10
+Hello Operator Marcus Vale,
+
+A CRITICAL/HIGH severity incident has been reported:
+- Case ID: INC-10
+- Category: Fire
+- Coordinates: (24.58, 78.91)
+- Details: Kitchen fire on 4th floor
+
+Please proceed to your dashboard immediately to assign a response team.
+================================================================================
+
+[2026-06-20 11:08:00] TO: hacker@apsas.city | SUBJECT: APSAS HIGH PRIORITY ALERT - New Incident INC-10
+Hello Operator Privilege Escalator,
+
+A CRITICAL/HIGH severity incident has been reported:
+- Case ID: INC-10
+- Category: Fire
+- Coordinates: (24.58, 78.91)
+- Details: Kitchen fire on 4th floor
+
+Please proceed to your dashboard immediately to assign a response team.
+================================================================================
+
+[2026-06-20 11:08:00] TO: test_operator@apsas.city | SUBJECT: APSAS HIGH PRIORITY ALERT - New Incident INC-10
+Hello Operator Test Operator,
+
+A CRITICAL/HIGH severity incident has been reported:
+- Case ID: INC-10
+- Category: Fire
+- Coordinates: (24.58, 78.91)
+- Details: Kitchen fire on 4th floor
+
+Please proceed to your dashboard immediately to assign a response team.
+================================================================================
+
+[2026-06-20 12:16:46] TO: mahi7781@gmail.com | SUBJECT: SOS DISTRESS SIGNAL RECEIVED - APSAS EMERGENCY
+Hello Mahi ,
+
+We have received your SOS distress broadcast at 2026-06-20 06:46:46.
+- SOS ID: SOS-7
+- Coordinates: (21.09579729719279, 79.14948905084985)
+
+Our operators have acknowledged the alarm and dispatched a safety response team to your location. Please stay calm, remain where you are if safe, and await instructions.
+================================================================================
+
+[2026-06-20 12:16:46] TO: admin@apsas.city | SUBJECT: APSAS System Notification - Critical SOS Distress Event
+Hello Admin Rhea Kapoor,
+
+A citizen has triggered a critical SOS alert:
+- Citizen Name: Mahi 
+- Coords: (21.09579729719279, 79.14948905084985)
+- Status: PENDING DISPATCH
+================================================================================
+
+[2026-06-20 12:16:46] TO: operator@apsas.city | SUBJECT: 🆘 APSAS EMERGENCY: CRITICAL SOS REQUEST SOS-7
+Hello Operator Marcus Vale,
+
+Distress alarm triggered:
+- User: Mahi 
+- Email: mahi7781@gmail.com
+- Coordinates: (21.09579729719279, 79.14948905084985)
+- Time: 2026-06-20T06:46:46.338694
+
+Please verify live feed coordinates on the Operations Map and allocate dispatch teams.
+================================================================================
+
+[2026-06-20 12:16:46] TO: snehalwath782@gmail.com | SUBJECT: APSAS System Notification - Critical SOS Distress Event
+Hello Admin Snehal wath,
+
+A citizen has triggered a critical SOS alert:
+- Citizen Name: Mahi 
+- Coords: (21.09579729719279, 79.14948905084985)
+- Status: PENDING DISPATCH
+================================================================================
+
+[2026-06-20 12:16:46] TO: hacker@apsas.city | SUBJECT: 🆘 APSAS EMERGENCY: CRITICAL SOS REQUEST SOS-7
+Hello Operator Privilege Escalator,
+
+Distress alarm triggered:
+- User: Mahi 
+- Email: mahi7781@gmail.com
+- Coordinates: (21.09579729719279, 79.14948905084985)
+- Time: 2026-06-20T06:46:46.338694
+
+Please verify live feed coordinates on the Operations Map and allocate dispatch teams.
+================================================================================
+
+[2026-06-20 12:16:57] TO: mahi7781@gmail.com | SUBJECT: SOS DISTRESS SIGNAL RECEIVED - APSAS EMERGENCY
+Hello Mahi ,
+
+We have received your SOS distress broadcast at 2026-06-20 06:46:57.
+- SOS ID: SOS-8
+- Coordinates: (21.09579729719279, 79.14948905084985)
+
+Our operators have acknowledged the alarm and dispatched a safety response team to your location. Please stay calm, remain where you are if safe, and await instructions.
+================================================================================
+
+[2026-06-20 12:16:57] TO: admin@apsas.city | SUBJECT: APSAS System Notification - Critical SOS Distress Event
+Hello Admin Rhea Kapoor,
+
+A citizen has triggered a critical SOS alert:
+- Citizen Name: Mahi 
+- Coords: (21.09579729719279, 79.14948905084985)
+- Status: PENDING DISPATCH
+================================================================================
+
+[2026-06-20 12:16:57] TO: operator@apsas.city | SUBJECT: 🆘 APSAS EMERGENCY: CRITICAL SOS REQUEST SOS-8
+Hello Operator Marcus Vale,
+
+Distress alarm triggered:
+- User: Mahi 
+- Email: mahi7781@gmail.com
+- Coordinates: (21.09579729719279, 79.14948905084985)
+- Time: 2026-06-20T06:46:57.288248
+
+Please verify live feed coordinates on the Operations Map and allocate dispatch teams.
+================================================================================
+
+[2026-06-20 12:16:57] TO: snehalwath782@gmail.com | SUBJECT: APSAS System Notification - Critical SOS Distress Event
+Hello Admin Snehal wath,
+
+A citizen has triggered a critical SOS alert:
+- Citizen Name: Mahi 
+- Coords: (21.09579729719279, 79.14948905084985)
+- Status: PENDING DISPATCH
+================================================================================
+
+[2026-06-20 12:16:57] TO: hacker@apsas.city | SUBJECT: 🆘 APSAS EMERGENCY: CRITICAL SOS REQUEST SOS-8
+Hello Operator Privilege Escalator,
+
+Distress alarm triggered:
+- User: Mahi 
+- Email: mahi7781@gmail.com
+- Coordinates: (21.09579729719279, 79.14948905084985)
+- Time: 2026-06-20T06:46:57.288248
+
+Please verify live feed coordinates on the Operations Map and allocate dispatch teams.
+================================================================================
+
+[2026-06-20 13:16:43] TO: mahi7781@gmail.com | SUBJECT: SOS DISTRESS SIGNAL RECEIVED - APSAS EMERGENCY
+Hello Mahi ,
+
+We have received your SOS distress broadcast at 2026-06-20 07:46:43.
+- SOS ID: SOS-9
+- Coordinates: (21.09577760526316, 79.14952177794204)
+
+Our operators have acknowledged the alarm and dispatched a safety response team to your location. Please stay calm, remain where you are if safe, and await instructions.
+================================================================================
+
+[2026-06-20 13:16:43] TO: admin@apsas.city | SUBJECT: APSAS System Notification - Critical SOS Distress Event
+Hello Admin Rhea Kapoor,
+
+A citizen has triggered a critical SOS alert:
+- Citizen Name: Mahi 
+- Coords: (21.09577760526316, 79.14952177794204)
+- Status: PENDING DISPATCH
+================================================================================
+
+[2026-06-20 13:16:43] TO: operator@apsas.city | SUBJECT: 🆘 APSAS EMERGENCY: CRITICAL SOS REQUEST SOS-9
+Hello Operator Marcus Vale,
+
+Distress alarm triggered:
+- User: Mahi 
+- Email: mahi7781@gmail.com
+- Coordinates: (21.09577760526316, 79.14952177794204)
+- Time: 2026-06-20T07:46:43.871965
+
+Please verify live feed coordinates on the Operations Map and allocate dispatch teams.
+================================================================================
+
+[2026-06-20 13:16:43] TO: snehalwath782@gmail.com | SUBJECT: APSAS System Notification - Critical SOS Distress Event
+Hello Admin Snehal wath,
+
+A citizen has triggered a critical SOS alert:
+- Citizen Name: Mahi 
+- Coords: (21.09577760526316, 79.14952177794204)
+- Status: PENDING DISPATCH
+================================================================================
+
+[2026-06-20 13:16:43] TO: hacker@apsas.city | SUBJECT: 🆘 APSAS EMERGENCY: CRITICAL SOS REQUEST SOS-9
+Hello Operator Privilege Escalator,
+
+Distress alarm triggered:
+- User: Mahi 
+- Email: mahi7781@gmail.com
+- Coordinates: (21.09577760526316, 79.14952177794204)
+- Time: 2026-06-20T07:46:43.871965
+
+Please verify live feed coordinates on the Operations Map and allocate dispatch teams.
+================================================================================
+
+[2026-06-20 13:17:01] TO: mahi7781@gmail.com | SUBJECT: Incident Report Submitted - INC-11
+Hello Mahi ,
+
+Your incident report has been received and stored in our database.
+
+Case Details:
+- Incident ID: INC-11
+- Category: Accident
+- Location: (21.095805198285937, 79.14951122096998)
+- Severity (AI Scored): HIGH
+- Status: SUBMITTED (in queue)
+
+Our dispatch operators have been alerted and will assign response teams shortly.
+================================================================================
+
+[2026-06-20 13:17:01] TO: operator@apsas.city | SUBJECT: APSAS HIGH PRIORITY ALERT - New Incident INC-11
+Hello Operator Marcus Vale,
+
+A CRITICAL/HIGH severity incident has been reported:
+- Case ID: INC-11
+- Category: Accident
+- Coordinates: (21.095805198285937, 79.14951122096998)
+- Details: APSAS Testing Incident
+
+
+Please proceed to your dashboard immediately to assign a response team.
+================================================================================
+
+[2026-06-20 13:17:01] TO: hacker@apsas.city | SUBJECT: APSAS HIGH PRIORITY ALERT - New Incident INC-11
+Hello Operator Privilege Escalator,
+
+A CRITICAL/HIGH severity incident has been reported:
+- Case ID: INC-11
+- Category: Accident
+- Coordinates: (21.095805198285937, 79.14951122096998)
+- Details: APSAS Testing Incident
+
+
+Please proceed to your dashboard immediately to assign a response team.
+================================================================================
+

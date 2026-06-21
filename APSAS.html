@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APSAS — Public Safety & Emergency Coordination Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg:#0B1020;
+  --bg-2:#0E1426;
+  --card:#131A2E;
+  --card-2:#161F38;
+  --border:rgba(148,163,255,0.12);
+  --border-strong:rgba(148,163,255,0.22);
+  --indigo:#6366F1;
+  --indigo-soft:rgba(99,102,241,0.16);
+  --emerald:#10B981;
+  --emerald-soft:rgba(16,185,129,0.14);
+  --amber:#F59E0B;
+  --amber-soft:rgba(245,158,11,0.14);
+  --red:#EF4444;
+  --red-soft:rgba(239,68,68,0.14);
+  --cyan:#22D3EE;
+  --magenta:#E879F9;
+  --text:#F8FAFC;
+  --text-dim:#9AA5C8;
+  --text-faint:#5B6690;
+  --radius-lg:20px;
+  --radius-md:14px;
+  --radius-sm:10px;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  scroll-behavior:smooth;
+  -webkit-font-smoothing:antialiased;
+}
+body{
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(99,102,241,0.10), transparent 45%),
+    radial-gradient(circle at 88% 18%, rgba(34,211,238,0.08), transparent 40%),
+    radial-gradient(circle at 50% 95%, rgba(232,121,249,0.06), transparent 40%);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+::selection{background:var(--indigo); color:#fff;}
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit; cursor:pointer;}
+.mono{font-family:'JetBrains Mono',monospace;}
+::-webkit-scrollbar{width:8px; height:8px;}
+::-webkit-scrollbar-thumb{background:#222b48; border-radius:8px;}
+::-webkit-scrollbar-track{background:transparent;}
+
+.page{display:none;}
+.page.active{display:block;}
+
+/* ============ UTIL ============ */
+.glass{
+  background:linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012));
+  border:1px solid var(--border);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  position:relative;
+}
+.card::before{
+  content:"";
+  position:absolute; inset:0;
+  border-radius:inherit;
+  background:linear-gradient(135deg, rgba(255,255,255,0.05), transparent 40%);
+  pointer-events:none;
+}
+.pill{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:5px 12px; border-radius:999px;
+  font-size:11.5px; font-weight:600; letter-spacing:.02em;
+  border:1px solid var(--border-strong);
+}
+.dot{width:6px; height:6px; border-radius:50%; flex-shrink:0;}
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  border-radius:11px; padding:13px 24px; font-weight:600; font-size:14.5px;
+  border:1px solid transparent; transition:all .2s ease; white-space:nowrap;
+}
+.btn-primary{
+  background:linear-gradient(135deg,#6366F1,#7C3AED);
+  color:#fff;
+  box-shadow:0 0 0 0 rgba(99,102,241,0.5), 0 8px 24px -8px rgba(99,102,241,0.6);
+}
+.btn-primary:hover{box-shadow:0 0 28px rgba(99,102,241,0.55), 0 8px 24px -8px rgba(99,102,241,0.7); transform:translateY(-1px);}
+.btn-ghost{
+  background:rgba(255,255,255,0.03); color:var(--text); border:1px solid var(--border-strong);
+}
+.btn-ghost:hover{background:rgba(255,255,255,0.07); border-color:rgba(99,102,241,0.5);}
+.btn-outline-cyan{
+  background:transparent; color:var(--cyan); border:1px solid rgba(34,211,238,0.4);
+}
+.btn-outline-cyan:hover{background:rgba(34,211,238,0.08);}
+.section-label{
+  font-size:12px; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--indigo); display:flex; align-items:center; gap:10px;
+}
+.section-label::before{content:""; width:18px; height:2px; background:var(--indigo); border-radius:2px;}
+h1,h2,h3{font-weight:800; letter-spacing:-0.02em; line-height:1.05;}
+
+/* ============ NAVBAR ============ */
+.navbar{
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 48px;
+  background:rgba(11,16,32,0.7);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.logo{display:flex; align-items:center; gap:10px; font-weight:800; font-size:19px; letter-spacing:-0.01em;}
+.logo-mark{
+  width:34px; height:34px; border-radius:9px;
+  background:linear-gradient(135deg,#6366F1,#22D3EE);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 0 22px rgba(99,102,241,0.55);
+  position:relative;
+}
+.logo-mark svg{width:18px; height:18px;}
+.logo span.sub{color:var(--text-dim); font-weight:500; font-size:11px; display:block; letter-spacing:.08em;}
+.nav-links{display:flex; align-items:center; gap:38px;}
+.nav-links a{font-size:14px; font-weight:500; color:var(--text-dim); transition:color .2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-actions{display:flex; align-items:center; gap:12px;}
+.nav-actions .btn{padding:10px 18px; font-size:13.5px;}
+
+/* ============ HERO ============ */
+.hero{
+  padding:170px 48px 90px;
+  display:grid; grid-template-columns:1fr; gap:50px;
+  max-width:1400px; margin:0 auto;
+  text-align:center;
+}
+.hero-eyebrow{
+  display:inline-flex; align-items:center; gap:8px; margin:0 auto 22px;
+  padding:7px 16px; border-radius:999px; border:1px solid var(--border-strong);
+  background:rgba(99,102,241,0.08); font-size:12.5px; color:#C7D2FE; font-weight:600;
+}
+.pulse-dot{width:7px; height:7px; border-radius:50%; background:var(--emerald); box-shadow:0 0 0 0 rgba(16,185,129,0.7); animation:pulse 1.8s infinite;}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(16,185,129,0.55);}
+  70%{box-shadow:0 0 0 9px rgba(16,185,129,0);}
+  100%{box-shadow:0 0 0 0 rgba(16,185,129,0);}
+}
+.hero h1{
+  font-size:clamp(40px,6vw,78px);
+  background:linear-gradient(180deg,#fff 35%, #B6C2FF 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hero h1 .accent{
+  background:linear-gradient(135deg,#818CF8,#22D3EE);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hero p.sub{
+  max-width:680px; margin:22px auto 0; color:var(--text-dim); font-size:18px; line-height:1.6;
+}
+.hero-ctas{display:flex; gap:14px; justify-content:center; margin-top:34px;}
+.hero-ctas .btn{padding:15px 28px; font-size:15px;}
+
+/* HERO VISUAL — futuristic city map */
+.hero-visual{
+  position:relative; margin-top:30px;
+  border-radius:24px; overflow:hidden;
+  border:1px solid var(--border-strong);
+  box-shadow:0 40px 100px -30px rgba(99,102,241,0.35), 0 0 0 1px rgba(255,255,255,0.02);
+  background:radial-gradient(ellipse at top, #131c33, #0a0f1e 70%);
+  max-width:1180px; margin-left:auto; margin-right:auto;
+}
+.hero-visual .glow-edge{position:absolute; inset:0; pointer-events:none; box-shadow:inset 0 0 120px rgba(99,102,241,0.08);}
+.map-toolbar{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 22px; border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,0.02);
+}
+.map-toolbar .tag{font-size:11px; color:var(--text-faint); letter-spacing:.08em; text-transform:uppercase;}
+.traffic-dots{display:flex; gap:6px;}
+.traffic-dots span{width:9px; height:9px; border-radius:50%; display:inline-block;}
+
+/* ============ FEATURES ============ */
+.section{padding:120px 48px; max-width:1400px; margin:0 auto;}
+.section-head{text-align:center; max-width:720px; margin:0 auto 60px;}
+.section-head h2{font-size:clamp(30px,4vw,46px); margin-top:16px;}
+.section-head p{color:var(--text-dim); font-size:16.5px; margin-top:14px; line-height:1.6;}
+.section-head.left{text-align:left; margin:0 0 50px;}
+.feature-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:18px;}
+@media(max-width:1100px){.feature-grid{grid-template-columns:repeat(2,1fr);}}
+.feature-card{
+  padding:28px 22px; border-radius:var(--radius-lg);
+  transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.feature-card:hover{transform:translateY(-6px); border-color:rgba(99,102,241,0.45); box-shadow:0 24px 50px -20px rgba(99,102,241,0.3);}
+.feature-icon{
+  width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  margin-bottom:18px;
+}
+.feature-card h3{font-size:16px; margin-bottom:8px;}
+.feature-card p{font-size:13.5px; color:var(--text-dim); line-height:1.55;}
+
+/* ============ HOW IT WORKS ============ */
+.flow-wrap{display:grid; grid-template-columns:1fr auto 1fr auto 1fr; align-items:center; gap:18px;}
+@media(max-width:900px){.flow-wrap{grid-template-columns:1fr; gap:30px;}}
+.flow-card{padding:34px 26px; border-radius:var(--radius-lg); text-align:center;}
+.flow-step{
+  width:38px; height:38px; border-radius:10px; margin:0 auto 18px;
+  display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px;
+  background:var(--indigo-soft); color:#A5B4FC; border:1px solid rgba(99,102,241,0.35);
+}
+.flow-card h3{font-size:16.5px; margin-bottom:10px;}
+.flow-card p{font-size:13.5px; color:var(--text-dim); line-height:1.55;}
+.flow-arrow{color:var(--text-faint); font-size:22px;}
+
+/* ============ STATS ============ */
+.stats-band{
+  border-radius:28px; padding:54px 48px;
+  display:grid; grid-template-columns:repeat(4,1fr); gap:20px;
+  background:linear-gradient(135deg, rgba(99,102,241,0.10), rgba(34,211,238,0.05));
+  border:1px solid var(--border-strong); position:relative; overflow:hidden;
+}
+@media(max-width:900px){.stats-band{grid-template-columns:repeat(2,1fr);}}
+.stat-item{text-align:center; padding:10px;}
+.stat-item .num{font-size:42px; font-weight:900; letter-spacing:-0.02em;}
+.stat-item .label{margin-top:6px; font-size:13px; color:var(--text-dim); letter-spacing:.03em;}
+
+/* ============ FOOTER ============ */
+footer{border-top:1px solid var(--border); padding:60px 48px 30px; max-width:1400px; margin:0 auto;}
+.footer-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px;}
+@media(max-width:800px){.footer-grid{grid-template-columns:1fr 1fr;}}
+.footer-grid h4{font-size:13px; color:var(--text-dim); letter-spacing:.06em; text-transform:uppercase; margin-bottom:16px;}
+.footer-grid a{display:block; font-size:14px; color:var(--text-dim); margin-bottom:10px;}
+.footer-grid a:hover{color:var(--text);}
+.footer-bottom{display:flex; justify-content:space-between; align-items:center; margin-top:50px; padding-top:24px; border-top:1px solid var(--border); font-size:12.5px; color:var(--text-faint);}
+
+/* ============ LOGIN PAGE ============ */
+.login-wrap{display:grid; grid-template-columns:1.1fr 1fr; min-height:100vh;}
+@media(max-width:900px){.login-wrap{grid-template-columns:1fr;}}
+.login-visual{
+  position:relative; overflow:hidden;
+  background:radial-gradient(ellipse at 30% 20%, rgba(99,102,241,0.25), transparent 55%),
+             radial-gradient(ellipse at 80% 80%, rgba(34,211,238,0.18), transparent 50%),
+             #0a0f1e;
+  display:flex; flex-direction:column; justify-content:space-between; padding:48px;
+}
+@media(max-width:900px){.login-visual{display:none;}}
+.login-visual .top{display:flex; justify-content:space-between; align-items:flex-start;}
+.login-visual h2{font-size:32px; max-width:420px; line-height:1.2; margin-top:60px;}
+.login-visual p{color:var(--text-dim); max-width:420px; margin-top:14px; font-size:15px; line-height:1.6;}
+.login-form-side{display:flex; align-items:center; justify-content:center; padding:48px;}
+.login-form{width:100%; max-width:400px;}
+.login-form h2{font-size:28px; margin-bottom:8px;}
+.login-form p.lead{color:var(--text-dim); font-size:14.5px; margin-bottom:34px;}
+.field{margin-bottom:18px;}
+.field label{display:block; font-size:13px; font-weight:600; margin-bottom:8px; color:var(--text-dim);}
+.field input{
+  width:100%; padding:13px 16px; border-radius:11px;
+  background:rgba(255,255,255,0.03); border:1px solid var(--border-strong); color:var(--text);
+  font-size:14.5px; outline:none; transition:border-color .2s, box-shadow .2s;
+}
+.field input:focus{border-color:var(--indigo); box-shadow:0 0 0 3px rgba(99,102,241,0.18);}
+.form-row{display:flex; justify-content:space-between; align-items:center; font-size:13px; margin:6px 0 24px;}
+.form-row a{color:#A5B4FC;}
+.divider{display:flex; align-items:center; gap:12px; margin:24px 0; color:var(--text-faint); font-size:12.5px;}
+.divider::before,.divider::after{content:""; flex:1; height:1px; background:var(--border-strong);}
+.signup-line{text-align:center; margin-top:24px; font-size:13.5px; color:var(--text-dim);}
+
+/* ============ DASHBOARD ============ */
+.dash{display:grid; grid-template-columns:240px 1fr; min-height:100vh;}
+.dash-sidebar{
+  background:var(--bg-2); border-right:1px solid var(--border);
+  position:sticky; top:0; height:100vh; padding:22px 16px; display:flex; flex-direction:column;
+}
+.dash-logo{display:flex; align-items:center; gap:10px; padding:6px 8px 26px; font-weight:800; font-size:17px;}
+.nav-section-label{font-size:10.5px; color:var(--text-faint); letter-spacing:.12em; text-transform:uppercase; margin:18px 10px 8px;}
+.side-link{
+  display:flex; align-items:center; gap:12px; padding:11px 12px; border-radius:10px;
+  font-size:14px; font-weight:500; color:var(--text-dim); margin-bottom:3px; transition:all .15s;
+  border:1px solid transparent; cursor:pointer;
+}
+.side-link svg{width:18px; height:18px; flex-shrink:0; opacity:.85;}
+.side-link:hover{background:rgba(255,255,255,0.04); color:var(--text);}
+.side-link.active{background:var(--indigo-soft); color:#C7D2FE; border-color:rgba(99,102,241,0.35);}
+.role-switch{
+  margin-top:auto; padding:14px; border-radius:14px; background:rgba(255,255,255,0.03); border:1px solid var(--border-strong);
+}
+.role-switch label{font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:8px;}
+.role-switch select{
+  width:100%; background:var(--card-2); color:var(--text); border:1px solid var(--border-strong); border-radius:9px;
+  padding:9px 10px; font-size:13.5px; outline:none;
+}
+
+.dash-main{display:flex; flex-direction:column; min-height:100vh;}
+.dash-topbar{
+  display:flex; align-items:center; justify-content:space-between; gap:20px;
+  padding:16px 30px; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:50;
+  background:rgba(11,16,32,0.85); backdrop-filter:blur(16px);
+}
+.search-box{
+  display:flex; align-items:center; gap:10px; flex:1; max-width:420px;
+  background:rgba(255,255,255,0.03); border:1px solid var(--border-strong); border-radius:11px; padding:10px 14px;
+}
+.search-box input{background:none; border:none; outline:none; color:var(--text); font-size:13.5px; width:100%;}
+.search-box svg{width:16px; height:16px; color:var(--text-faint); flex-shrink:0;}
+.search-box .kbd{font-size:11px; color:var(--text-faint); border:1px solid var(--border-strong); border-radius:5px; padding:2px 6px;}
+.topbar-actions{display:flex; align-items:center; gap:16px;}
+.icon-btn{
+  width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,0.03); border:1px solid var(--border-strong); position:relative; cursor:pointer;
+}
+.icon-btn svg{width:18px; height:18px; color:var(--text-dim);}
+.icon-btn .badge{
+  position:absolute; top:-4px; right:-4px; background:var(--red); width:16px; height:16px; border-radius:50%;
+  font-size:9.5px; display:flex; align-items:center; justify-content:center; font-weight:700; border:2px solid var(--bg);
+}
+.profile-chip{display:flex; align-items:center; gap:10px; cursor:pointer;}
+.avatar{
+  width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#6366F1,#22D3EE);
+  display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px;
+}
+.profile-chip .who{font-size:13px; font-weight:600; line-height:1.2;}
+.profile-chip .role{font-size:11px; color:var(--text-faint);}
+
+.dash-body{padding:26px 30px 60px; display:flex; flex-direction:column; gap:22px;}
+.dash-head{display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:14px;}
+.dash-head h1{font-size:25px;}
+.dash-head .meta{font-size:13px; color:var(--text-faint); margin-top:4px;}
+.dash-head .live-tag{display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--emerald); font-weight:600;}
+
+/* KPI cards */
+.kpi-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:18px;}
+@media(max-width:1000px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+.kpi-card{padding:22px; display:flex; flex-direction:column; gap:14px;}
+.kpi-top{display:flex; justify-content:space-between; align-items:flex-start;}
+.kpi-icon{width:40px; height:40px; border-radius:11px; display:flex; align-items:center; justify-content:center;}
+.kpi-trend{font-size:11.5px; font-weight:700; padding:4px 9px; border-radius:7px; display:flex; align-items:center; gap:4px;}
+.kpi-value{font-size:32px; font-weight:800; letter-spacing:-0.02em;}
+.kpi-label{font-size:13px; color:var(--text-dim);}
+
+/* Main grid: map + feed */
+.workspace-grid{display:grid; grid-template-columns:2.1fr 1fr; gap:18px; align-items:flex-start;}
+@media(max-width:1150px){.workspace-grid{grid-template-columns:1fr;}}
+
+.map-card{padding:0; overflow:hidden; min-height:560px; display:flex; flex-direction:column;}
+.map-card-head{display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--border);}
+.map-card-head h3{font-size:15.5px; display:flex; align-items:center; gap:10px;}
+.layer-toggles{display:flex; gap:8px; flex-wrap:wrap;}
+.layer-chip{
+  font-size:11.5px; font-weight:600; padding:6px 11px; border-radius:8px; border:1px solid var(--border-strong);
+  display:flex; align-items:center; gap:6px; cursor:pointer; color:var(--text-dim); transition:all .15s;
+}
+.layer-chip.on{color:var(--text); background:rgba(255,255,255,0.05);}
+.map-canvas-wrap{position:relative; flex:1; background:radial-gradient(ellipse at 50% 0%, #14203f, #0a0f1e 75%); min-height:480px;}
+.map-svg{position:absolute; inset:0; width:100%; height:100%;}
+.map-legend{
+  position:absolute; bottom:16px; left:16px; display:flex; flex-direction:column; gap:8px;
+  padding:14px 16px; border-radius:12px; font-size:11.5px;
+}
+.legend-row{display:flex; align-items:center; gap:8px; color:var(--text-dim);}
+.map-coords{position:absolute; top:16px; right:16px; font-size:11px; color:var(--text-faint); padding:8px 12px; border-radius:8px;}
+
+/* live feed */
+.feed-card{padding:0; display:flex; flex-direction:column; max-height:560px;}
+.feed-head{padding:18px 22px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;}
+.feed-head h3{font-size:15.5px;}
+.feed-list{overflow-y:auto; flex:1; padding:8px 14px;}
+.feed-item{display:flex; gap:12px; padding:13px 8px; border-bottom:1px solid rgba(255,255,255,0.04);}
+.feed-time{font-size:11px; color:var(--text-faint); width:42px; flex-shrink:0; padding-top:2px;}
+.feed-dot-wrap{position:relative; width:10px; flex-shrink:0;}
+.feed-dot{width:9px; height:9px; border-radius:50%; margin-top:5px;}
+.feed-text strong{font-size:13.5px; display:block;}
+.feed-text span{font-size:12px; color:var(--text-faint);}
+
+/* incidents table */
+.panel{padding:22px;}
+.panel-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:10px;}
+.panel-head h3{font-size:16.5px;}
+.stage-track{display:flex; gap:0; margin-bottom:20px; border-radius:12px; overflow:hidden; border:1px solid var(--border-strong);}
+.stage{flex:1; padding:10px 6px; text-align:center; font-size:11.5px; font-weight:700; letter-spacing:.02em; color:var(--text-faint); background:rgba(255,255,255,0.02); border-right:1px solid var(--border);}
+.stage:last-child{border-right:none;}
+.stage.done{color:var(--emerald); background:rgba(16,185,129,0.08);}
+.stage.current{color:#fff; background:var(--indigo-soft);}
+table{width:100%; border-collapse:collapse;}
+th{text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-faint); padding:10px 14px; border-bottom:1px solid var(--border);}
+td{padding:14px 14px; font-size:13.5px; border-bottom:1px solid rgba(255,255,255,0.04);}
+tr:last-child td{border-bottom:none;}
+.status-tag{font-size:11px; font-weight:700; padding:4px 10px; border-radius:7px; display:inline-block;}
+.row-hover:hover{background:rgba(255,255,255,0.025);}
+
+/* route planner */
+.route-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+@media(max-width:900px){.route-grid{grid-template-columns:1fr;}}
+.route-options{display:flex; flex-direction:column; gap:12px;}
+.route-option{
+  display:flex; justify-content:space-between; align-items:center; padding:16px 18px; border-radius:14px;
+  border:1px solid var(--border-strong); cursor:pointer; transition:all .15s;
+}
+.route-option.selected{border-color:var(--indigo); background:var(--indigo-soft);}
+.route-option .name{font-weight:700; font-size:14px; display:flex; align-items:center; gap:8px;}
+.route-stats{display:flex; gap:18px; margin-top:8px; font-size:12px; color:var(--text-dim);}
+.safety-score{font-weight:800; font-size:20px;}
+
+/* analytics */
+.analytics-grid{display:grid; grid-template-columns:1.4fr 1fr; gap:18px;}
+@media(max-width:1000px){.analytics-grid{grid-template-columns:1fr;}}
+.analytics-grid-2{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:18px;}
+@media(max-width:1000px){.analytics-grid-2{grid-template-columns:1fr;}}
+.chart-wrap{position:relative; height:240px;}
+.chart-wrap.tall{height:280px;}
+
+[data-role-only]{display:none;}
+body.role-citizen [data-role-only*="citizen"],
+body.role-operator [data-role-only*="operator"],
+body.role-admin [data-role-only*="admin"]{display:initial;}
+body.role-citizen [data-role-block*="citizen"],
+body.role-operator [data-role-block*="operator"],
+body.role-admin [data-role-block*="admin"]{display:block;}
+body.role-citizen [data-role-grid*="citizen"],
+body.role-operator [data-role-grid*="operator"],
+body.role-admin [data-role-grid*="admin"]{display:grid;}
+body.role-citizen [data-role-flex*="citizen"],
+body.role-operator [data-role-flex*="operator"],
+body.role-admin [data-role-flex*="admin"]{display:flex;}
+
+.dash-content-section{display:none;}
+.dash-content-section.active{display:block;}
+
+.fade-in{animation:fadeIn .5s ease both;}
+@keyframes fadeIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+@media(max-width:900px){
+  .dash{grid-template-columns:1fr;}
+  .dash-sidebar{display:none;}
+  .navbar{padding:14px 20px;}
+  .nav-links{display:none;}
+  .hero{padding:140px 20px 60px;}
+  .section{padding:70px 20px;}
+}
+</style>
+</head>
+<body class="role-admin">
+
+<!-- ================= LANDING PAGE ================= -->
+<div class="page active" id="page-landing">
+  <nav class="navbar">
+    <div class="logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L4 6V12C4 17 7.5 20.5 12 22C16.5 20.5 20 17 20 12V6L12 2Z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12.5L11 14.5L15 9.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>APSAS<span class="sub">PUBLIC SAFETY OS</span></div>
+    </div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#solutions">Solutions</a>
+      <a href="#how">How it Works</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="nav-actions">
+      <a class="btn btn-ghost" onclick="showPage('login')">Login</a>
+      <a class="btn btn-primary" onclick="showPage('dashboard')">Get Started</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <div class="hero-eyebrow"><span class="pulse-dot"></span> LIVE — 247 active sensors across 12 zones</div>
+      <h1>Monitor. Protect. <span class="accent">Respond.</span></h1>
+      <p class="sub">Real-time safety intelligence, smart route planning, and emergency coordination in a unified command center.</p>
+      <div class="hero-ctas">
+        <button class="btn btn-primary" onclick="showPage('dashboard')">Launch Command Center →</button>
+        <button class="btn btn-ghost" onclick="showPage('login')">Request Demo</button>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="glow-edge"></div>
+      <div class="map-toolbar">
+        <span class="tag">Sector 7 — Downtown Grid · Live Feed</span>
+        <div class="traffic-dots">
+          <span style="background:var(--red)"></span><span style="background:var(--amber)"></span><span style="background:var(--emerald)"></span>
+        </div>
+      </div>
+      <div style="height:480px;">
+        <svg viewBox="0 0 1200 540" class="map-svg" id="hero-map-svg"></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Capabilities -->
+  <section class="section" id="features">
+    <div class="section-head">
+      <div class="section-label" style="justify-content:center">CAPABILITIES</div>
+      <h2>Everything a command center needs, unified</h2>
+      <p>One platform spanning risk intelligence, routing, and live emergency response — built for the speed real incidents demand.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="card feature-card">
+        <div class="feature-icon" style="background:var(--indigo-soft)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg></div>
+        <h3>Zone Intelligence</h3>
+        <p>AI-scored risk zones updated continuously from incident density, sensor data, and historical patterns.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon" style="background:var(--emerald-soft)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="1.8"><path d="M3 12l5 5L21 4"/></svg></div>
+        <h3>Safe Route Planning</h3>
+        <p>Fastest, safest, and balanced routing that weighs live risk data against travel time.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon" style="background:var(--red-soft)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F87171" stroke-width="1.8"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></div>
+        <h3>SOS Management</h3>
+        <p>One-tap distress signals routed instantly to the nearest available response team.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon" style="background:var(--amber-soft)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="1.8"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <h3>Location Intelligence</h3>
+        <p>Precise geofencing and asset tracking for teams, citizens, and infrastructure in real time.</p>
+      </div>
+      <div class="card feature-card">
+        <div class="feature-icon" style="background:rgba(34,211,238,0.14)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div>
+        <h3>Analytics</h3>
+        <p>Predictive dashboards covering trends, response times, and zone-level breakdowns.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section" id="how">
+    <div class="section-head">
+      <div class="section-label" style="justify-content:center">WORKFLOW</div>
+      <h2>How APSAS works</h2>
+      <p>A closed-loop response pipeline — from the moment a citizen reports, to full resolution.</p>
+    </div>
+    <div class="flow-wrap">
+      <div class="card flow-card"><div class="flow-step">1</div><h3>User Reports</h3><p>A citizen submits an incident or triggers an SOS from the field, with location auto-attached.</p></div>
+      <div class="flow-arrow">→</div>
+      <div class="card flow-card"><div class="flow-step">2</div><h3>Operator Responds</h3><p>An operator triages, assigns severity, and dispatches the nearest response team.</p></div>
+      <div class="flow-arrow">→</div>
+      <div class="card flow-card"><div class="flow-step">3</div><h3>Admin Monitors</h3><p>Command staff track resolution, team performance, and city-wide risk in real time.</p></div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="section" id="solutions">
+    <div class="stats-band">
+      <div class="stat-item"><div class="num" style="color:#F87171">38</div><div class="label">Active Incidents</div></div>
+      <div class="stat-item"><div class="num" style="color:#FBBF24">12</div><div class="label">High Risk Zones</div></div>
+      <div class="stat-item"><div class="num" style="color:#818CF8">64</div><div class="label">Response Teams</div></div>
+      <div class="stat-item"><div class="num" style="color:#34D399">97.2%</div><div class="label">Safety Coverage</div></div>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:14px;">
+          <div class="logo-mark" style="width:30px;height:30px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M12 2L4 6V12C4 17 7.5 20.5 12 22C16.5 20.5 20 17 20 12V6L12 2Z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+          APSAS
+        </div>
+        <p style="color:var(--text-dim); font-size:13.5px; max-width:280px; line-height:1.6;">AI-powered public safety and emergency coordination, built for smart cities and command centers.</p>
+      </div>
+      <div><h4>Product</h4><a>Zone Intelligence</a><a>Route Planner</a><a>SOS Center</a><a>Analytics</a></div>
+      <div><h4>Company</h4><a>About</a><a>Careers</a><a>Press</a><a>Security</a></div>
+      <div><h4>Contact</h4><a>ops@apsas.city</a><a>+1 (800) 555-0142</a><a>Request a Demo</a></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 APSAS Command Systems. All rights reserved.</span>
+      <span>Status: All systems operational</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ================= LOGIN PAGE ================= -->
+<div class="page" id="page-login">
+  <div class="login-wrap">
+    <div class="login-visual">
+      <div class="top">
+        <div class="logo">
+          <div class="logo-mark" style="width:30px;height:30px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M12 2L4 6V12C4 17 7.5 20.5 12 22C16.5 20.5 20 17 20 12V6L12 2Z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+          APSAS
+        </div>
+        <button class="btn btn-ghost" style="padding:8px 16px; font-size:13px;" onclick="showPage('landing')">← Back home</button>
+      </div>
+      <svg viewBox="0 0 600 420" style="width:100%; max-width:520px; margin:30px 0;"><use href="#login-illustration"></use></svg>
+      <div>
+        <h2>City-wide situational awareness, in one screen.</h2>
+        <p>Sign in to access live incident feeds, dispatch tools, and zone-level risk intelligence.</p>
+      </div>
+    </div>
+    <div class="login-form-side">
+      <div class="login-form">
+        <h2>Welcome back</h2>
+        <p class="lead">Sign in to your command center account.</p>
+        <div class="field"><label>Email address</label><input type="email" placeholder="you@agency.gov"></div>
+        <div class="field"><label>Password</label><input type="password" placeholder="••••••••••"></div>
+        <div class="form-row"><label style="display:flex; align-items:center; gap:8px; color:var(--text-dim);"><input type="checkbox"> Remember me</label><a href="#">Forgot password?</a></div>
+        <button class="btn btn-primary" style="width:100%;" onclick="showPage('dashboard')">Login →</button>
+        <div class="divider">OR</div>
+        <button class="btn btn-ghost" style="width:100%;">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.67-2.26 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.1A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.44.34-2.1V7.06H2.18A11 11 0 0 0 1 12c0 1.77.43 3.45 1.18 4.94l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15A10.9 10.9 0 0 0 12 1 11 11 0 0 0 2.18 7.06l3.66 2.84C6.71 7.3 9.14 5.38 12 5.38z"/></svg>
+          Continue with Google
+        </button>
+        <p class="signup-line">Don't have an account? <a href="#" style="color:#A5B4FC;">Create one</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+<svg width="0" height="0" style="position:absolute;"><defs>
+<g id="login-illustration">
+  <rect x="0" y="0" width="600" height="420" fill="none"/>
+</g>
+</defs></svg>
+
+<!-- ================= DASHBOARD ================= -->
+<div class="page" id="page-dashboard">
+  <div class="dash">
+    <aside class="dash-sidebar">
+      <div class="dash-logo">
+        <div class="logo-mark" style="width:30px;height:30px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M12 2L4 6V12C4 17 7.5 20.5 12 22C16.5 20.5 20 17 20 12V6L12 2Z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+        APSAS
+      </div>
+      <div class="nav-section-label">Main</div>
+      <div class="side-link active" onclick="showSection('overview', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg> Dashboard</div>
+      <div class="side-link" onclick="showSection('zonemap', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="11" r="3"/><path d="M12 21s7-6.5 7-11.5A7 7 0 1 0 5 9.5C5 14.5 12 21 12 21z"/></svg> Zone Map</div>
+      <div class="side-link" onclick="showSection('routes', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h6a4 4 0 0 0 4-4V8"/></svg> Route Planner</div>
+      <div class="side-link" onclick="showSection('sos', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg> SOS Center</div>
+      <div class="side-link" onclick="showSection('incidents', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12h6M9 16h6M9 8h6"/><rect x="4" y="3" width="16" height="18" rx="2"/></svg> Incidents</div>
+      <div class="side-link" onclick="showSection('analytics', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg> Analytics</div>
+      <div class="nav-section-label">System</div>
+      <div class="side-link" onclick="showSection('settings', this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a7.97 7.97 0 0 0 0-6l1.6-1.2-2-3.4-1.9.6a8 8 0 0 0-2.6-1.5L14 1h-4l-.5 2.5a8 8 0 0 0-2.6 1.5l-1.9-.6-2 3.4L4.6 9a8 8 0 0 0 0 6l-1.6 1.2 2 3.4 1.9-.6a8 8 0 0 0 2.6 1.5L10 23h4l.5-2.5a8 8 0 0 0 2.6-1.5l1.9.6 2-3.4z"/></svg> Settings</div>
+
+      <div class="role-switch">
+        <label>Viewing as</label>
+        <select onchange="setRole(this.value)">
+          <option value="admin" selected>Admin</option>
+          <option value="operator">Emergency Operator</option>
+          <option value="citizen">Citizen / User</option>
+        </select>
+      </div>
+    </aside>
+
+    <div class="dash-main">
+      <div class="dash-topbar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input placeholder="Search incidents, zones, teams…">
+          <span class="kbd">⌘K</span>
+        </div>
+        <div class="topbar-actions">
+          <div class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="badge">5</span></div>
+          <button class="btn btn-primary" style="padding:9px 16px; font-size:13px;" data-role-only="citizen,operator" onclick="showSection('sos')">⚠ Report / SOS</button>
+          <div class="profile-chip" onclick="showPage('landing')">
+            <div class="avatar">RK</div>
+            <div><div class="who" id="profile-name">Rhea Kapoor</div><div class="role" id="profile-role">Admin · Command Staff</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-body">
+
+        <!-- ===== OVERVIEW SECTION ===== -->
+        <div class="dash-content-section active" id="section-overview">
+          <div class="dash-head">
+            <div>
+              <h1 data-role-only="admin">Command Center Overview</h1>
+              <h1 data-role-only="operator" style="display:none">Operator Console</h1>
+              <h1 data-role-only="citizen" style="display:none">Your Safety Dashboard</h1>
+              <div class="meta">Sector 7 · Downtown Grid · Updated just now</div>
+            </div>
+            <div class="live-tag"><span class="pulse-dot"></span> Live data stream active</div>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="card kpi-card">
+              <div class="kpi-top">
+                <div class="kpi-icon" style="background:var(--red-soft)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F87171" stroke-width="1.8"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg></div>
+                <div class="kpi-trend" style="color:#F87171; background:var(--red-soft)">▲ 4 new</div>
+              </div>
+              <div class="kpi-value">38</div>
+              <div class="kpi-label">Active Incidents</div>
+            </div>
+            <div class="card kpi-card">
+              <div class="kpi-top">
+                <div class="kpi-icon" style="background:var(--amber-soft)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="1.8"><circle cx="12" cy="11" r="3"/><path d="M12 21s7-6.5 7-11.5A7 7 0 1 0 5 9.5C5 14.5 12 21 12 21z"/></svg></div>
+                <div class="kpi-trend" style="color:#FBBF24; background:var(--amber-soft)">▲ 2</div>
+              </div>
+              <div class="kpi-value">12</div>
+              <div class="kpi-label">High Risk Zones</div>
+            </div>
+            <div class="card kpi-card">
+              <div class="kpi-top">
+                <div class="kpi-icon" style="background:rgba(99,102,241,0.16)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818CF8" stroke-width="1.8"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></div>
+                <div class="kpi-trend" style="color:#34D399; background:var(--emerald-soft)">▼ 1</div>
+              </div>
+              <div class="kpi-value">7</div>
+              <div class="kpi-label">SOS Requests</div>
+            </div>
+            <div class="card kpi-card">
+              <div class="kpi-top">
+                <div class="kpi-icon" style="background:var(--emerald-soft)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="1.8"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                <div class="kpi-trend" style="color:#34D399; background:var(--emerald-soft)">64 ready</div>
+              </div>
+              <div class="kpi-value">64</div>
+              <div class="kpi-label">Response Teams</div>
+            </div>
+          </div>
+
+          <div class="workspace-grid">
+            <div class="card map-card">
+              <div class="map-card-head">
+                <h3>🗺 Live City Map — Sector 7</h3>
+                <div class="layer-toggles">
+                  <div class="layer-chip on" data-layer="zones">● Risk Zones</div>
+                  <div class="layer-chip on" data-layer="incidents">● Incidents</div>
+                  <div class="layer-chip on" data-layer="sos">● SOS</div>
+                  <div class="layer-chip on" data-layer="teams">● Teams</div>
+                </div>
+              </div>
+              <div class="map-canvas-wrap">
+                <svg viewBox="0 0 1000 560" class="map-svg" id="dash-map-svg"></svg>
+                <div class="map-coords glass mono">24.6° N, 78.9° E · Zoom 14x</div>
+                <div class="map-legend glass">
+                  <div class="legend-row"><span class="dot" style="background:var(--red)"></span> Critical zone</div>
+                  <div class="legend-row"><span class="dot" style="background:var(--amber)"></span> Elevated risk</div>
+                  <div class="legend-row"><span class="dot" style="background:var(--emerald)"></span> Response team</div>
+                  <div class="legend-row"><span class="dot" style="background:var(--cyan)"></span> Your location</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card feed-card">
+              <div class="feed-head">
+                <h3>Live Incident Feed</h3>
+                <span class="pill" style="color:#34D399; border-color:rgba(16,185,129,0.4)"><span class="dot" style="background:var(--emerald)"></span> Streaming</span>
+              </div>
+              <div class="feed-list" id="feed-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== ZONE MAP SECTION ===== -->
+        <div class="dash-content-section" id="section-zonemap">
+          <div class="dash-head"><div><h1>Zone Map</h1><div class="meta">Risk scoring across 12 monitored zones</div></div></div>
+          <div class="card map-card" style="min-height:600px;">
+            <div class="map-card-head">
+              <h3>Full Sector Risk Heatmap</h3>
+              <div class="layer-toggles">
+                <div class="layer-chip on">● Heat Layer</div>
+                <div class="layer-chip on">● Boundaries</div>
+              </div>
+            </div>
+            <div class="map-canvas-wrap" style="min-height:540px;">
+              <svg viewBox="0 0 1000 560" class="map-svg" id="zonemap-svg"></svg>
+              <div class="map-legend glass">
+                <div class="legend-row"><span class="dot" style="background:var(--red)"></span> Critical (8 zones)</div>
+                <div class="legend-row"><span class="dot" style="background:var(--amber)"></span> Elevated (4 zones)</div>
+                <div class="legend-row"><span class="dot" style="background:var(--emerald)"></span> Stable</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== ROUTE PLANNER ===== -->
+        <div class="dash-content-section" id="section-routes">
+          <div class="dash-head"><div><h1>Safe Route Planner</h1><div class="meta">AI-weighted routing across live risk data</div></div></div>
+          <div class="route-grid">
+            <div class="card panel">
+              <h3 style="margin-bottom:18px;">Plan a route</h3>
+              <div class="field"><label>Source</label><input type="text" value="Central Bus Terminal, Sector 4"></div>
+              <div class="field"><label>Destination</label><input type="text" value="Riverside Tech Park, Sector 9"></div>
+              <button class="btn btn-primary" style="width:100%; margin-top:6px;">Calculate Routes →</button>
+              <div style="margin-top:26px;">
+                <div class="section-label" style="margin-bottom:14px;">ROUTE OPTIONS</div>
+                <div class="route-options">
+                  <div class="route-option selected">
+                    <div>
+                      <div class="name"><span class="dot" style="background:var(--emerald)"></span>Safest Route</div>
+                      <div class="route-stats"><span>📏 6.8 km</span><span>⏱ 22 min</span></div>
+                    </div>
+                    <div class="safety-score" style="color:#34D399">94</div>
+                  </div>
+                  <div class="route-option">
+                    <div>
+                      <div class="name"><span class="dot" style="background:var(--indigo)"></span>Balanced Route</div>
+                      <div class="route-stats"><span>📏 5.4 km</span><span>⏱ 16 min</span></div>
+                    </div>
+                    <div class="safety-score" style="color:#A5B4FC">78</div>
+                  </div>
+                  <div class="route-option">
+                    <div>
+                      <div class="name"><span class="dot" style="background:var(--amber)"></span>Fastest Route</div>
+                      <div class="route-stats"><span>📏 4.9 km</span><span>⏱ 12 min</span></div>
+                    </div>
+                    <div class="safety-score" style="color:#FBBF24">61</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card map-card">
+              <div class="map-card-head"><h3>Route Preview</h3></div>
+              <div class="map-canvas-wrap"><svg viewBox="0 0 1000 560" class="map-svg" id="route-svg"></svg></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SOS CENTER ===== -->
+        <div class="dash-content-section" id="section-sos">
+          <div class="dash-head"><div><h1>SOS Center</h1><div class="meta">Active distress signals requiring response</div></div></div>
+
+          <div data-role-block="citizen" style="display:none;">
+            <div class="card panel" style="text-align:center; padding:50px;">
+              <h3 style="font-size:20px; margin-bottom:10px;">In an emergency?</h3>
+              <p style="color:var(--text-dim); margin-bottom:26px;">Pressing SOS shares your live location with the nearest response team instantly.</p>
+              <button class="btn" style="background:var(--red); color:#fff; padding:22px 50px; font-size:18px; border-radius:50px; box-shadow:0 0 40px rgba(239,68,68,0.5);">🆘 SEND SOS</button>
+            </div>
+          </div>
+
+          <div data-role-block="admin,operator" style="display:block;">
+            <div class="card panel">
+              <div class="panel-head"><h3>Active SOS Requests</h3><span class="pill" style="color:#F87171;border-color:rgba(239,68,68,0.4)"><span class="dot" style="background:var(--red)"></span>7 pending</span></div>
+              <table>
+                <thead><tr><th>ID</th><th>Type</th><th>Location</th><th>Reported</th><th>Status</th><th>Assigned Team</th></tr></thead>
+                <tbody>
+                  <tr class="row-hover"><td class="mono">SOS-2291</td><td>Medical</td><td>Sector 9, Riverside</td><td>2 min ago</td><td><span class="status-tag" style="background:var(--red-soft); color:#F87171;">Dispatched</span></td><td>Team Echo-3</td></tr>
+                  <tr class="row-hover"><td class="mono">SOS-2290</td><td>Fire</td><td>Sector 4, Market St</td><td>6 min ago</td><td><span class="status-tag" style="background:var(--amber-soft); color:#FBBF24;">In Progress</span></td><td>Team Bravo-1</td></tr>
+                  <tr class="row-hover"><td class="mono">SOS-2288</td><td>Security</td><td>Sector 7, Central Plaza</td><td>14 min ago</td><td><span class="status-tag" style="background:var(--emerald-soft); color:#34D399;">Resolved</span></td><td>Team Delta-5</td></tr>
+                  <tr class="row-hover"><td class="mono">SOS-2285</td><td>Medical</td><td>Sector 2, Old Town</td><td>21 min ago</td><td><span class="status-tag" style="background:var(--emerald-soft); color:#34D399;">Resolved</span></td><td>Team Alpha-2</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== INCIDENTS ===== -->
+        <div class="dash-content-section" id="section-incidents">
+          <div class="dash-head"><div><h1>Incident Management</h1><div class="meta">Lifecycle tracking across active cases</div></div></div>
+          <div class="card panel">
+            <div class="panel-head"><h3>INC-5521 — Structure Fire, Market St Warehouse</h3><span class="pill" style="color:#FBBF24; border-color:rgba(245,158,11,0.4);">Severity: High</span></div>
+            <div class="stage-track">
+              <div class="stage done">REPORTED</div>
+              <div class="stage done">ASSIGNED</div>
+              <div class="stage done">DISPATCHED</div>
+              <div class="stage current">IN PROGRESS</div>
+              <div class="stage">RESOLVED</div>
+            </div>
+            <table>
+              <thead><tr><th>ID</th><th>Type</th><th>Zone</th><th>Stage</th><th>Severity</th><th>ETA</th></tr></thead>
+              <tbody>
+                <tr class="row-hover"><td class="mono">INC-5521</td><td>Fire</td><td>Sector 4</td><td><span class="status-tag" style="background:var(--amber-soft); color:#FBBF24;">In Progress</span></td><td>High</td><td>4 min</td></tr>
+                <tr class="row-hover"><td class="mono">INC-5519</td><td>Medical</td><td>Sector 9</td><td><span class="status-tag" style="background:var(--red-soft); color:#F87171;">Dispatched</span></td><td>Critical</td><td>2 min</td></tr>
+                <tr class="row-hover"><td class="mono">INC-5512</td><td>Flood Risk</td><td>Sector 1</td><td><span class="status-tag" style="background:rgba(99,102,241,0.16); color:#A5B4FC;">Assigned</span></td><td>Medium</td><td>11 min</td></tr>
+                <tr class="row-hover"><td class="mono">INC-5508</td><td>Road Hazard</td><td>Sector 6</td><td><span class="status-tag" style="background:var(--emerald-soft); color:#34D399;">Resolved</span></td><td>Low</td><td>—</td></tr>
+                <tr class="row-hover"><td class="mono">INC-5501</td><td>Security</td><td>Sector 7</td><td><span class="status-tag" style="background:var(--emerald-soft); color:#34D399;">Resolved</span></td><td>Medium</td><td>—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ===== ANALYTICS ===== -->
+        <div class="dash-content-section" id="section-analytics">
+          <div class="dash-head"><div><h1>Analytics</h1><div class="meta">City-wide safety performance metrics</div></div></div>
+          <div class="analytics-grid">
+            <div class="card panel">
+              <div class="panel-head"><h3>Incident Trends (30 days)</h3></div>
+              <div class="chart-wrap tall"><canvas id="chart-trend"></canvas></div>
+            </div>
+            <div class="card panel">
+              <div class="panel-head"><h3>Risk Distribution</h3></div>
+              <div class="chart-wrap tall"><canvas id="chart-risk"></canvas></div>
+            </div>
+          </div>
+          <div class="analytics-grid-2">
+            <div class="card panel">
+              <div class="panel-head"><h3>Response Time by Zone (min)</h3></div>
+              <div class="chart-wrap"><canvas id="chart-response"></canvas></div>
+            </div>
+            <div class="card panel">
+              <div class="panel-head"><h3>Zone Analysis — Incidents by Category</h3></div>
+              <div class="chart-wrap"><canvas id="chart-zone"></canvas></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SETTINGS ===== -->
+        <div class="dash-content-section" id="section-settings">
+          <div class="dash-head"><div><h1>Settings</h1><div class="meta">Account and platform preferences</div></div></div>
+          <div class="card panel" style="max-width:520px;">
+            <div class="field"><label>Full name</label><input value="Rhea Kapoor"></div>
+            <div class="field"><label>Email</label><input value="rhea.kapoor@apsas.city"></div>
+            <div class="field"><label>Notification channel</label><input value="Push + SMS"></div>
+            <button class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- PAGE NAV ---------- */
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function showSection(id, el){
+  document.querySelectorAll('.dash-content-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('section-'+id).classList.add('active');
+  if(el){
+    document.querySelectorAll('.side-link').forEach(l=>l.classList.remove('active'));
+    el.classList.add('active');
+  }
+}
+function setRole(role){
+  document.body.className = 'role-'+role;
+  const names = {admin:['Rhea Kapoor','Admin · Command Staff'], operator:['Marcus Vale','Emergency Operator'], citizen:['Aanya Singh','Citizen']};
+  document.getElementById('profile-name').textContent = names[role][0];
+  document.getElementById('profile-role').textContent = names[role][1];
+  document.querySelectorAll('[data-role-only]').forEach(elm=>{
+    elm.style.display = elm.getAttribute('data-role-only').includes(role) ? '' : 'none';
+  });
+  document.querySelectorAll('[data-role-block]').forEach(elm=>{
+    elm.style.display = elm.getAttribute('data-role-block').includes(role) ? 'block' : 'none';
+  });
+}
+setRole('admin');
+
+/* ---------- MAP GENERATION (SVG city grid + zones + markers) ---------- */
+function buildMap(svgId, w, h, opts={}){
+  const svg = document.getElementById(svgId);
+  if(!svg) return;
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  let s = '';
+  // grid
+  s += `<defs>
+    <radialGradient id="grad-${svgId}" cx="50%" cy="0%" r="80%">
+      <stop offset="0%" stop-color="#1c2a4d"/><stop offset="100%" stop-color="#0a0f1e"/>
+    </radialGradient>
+  </defs>`;
+  s += `<rect width="${w}" height="${h}" fill="url(#grad-${svgId})"/>`;
+  for(let x=0;x<=w;x+=40){ s += `<line x1="${x}" y1="0" x2="${x}" y2="${h}" stroke="#6366F1" stroke-opacity="0.05"/>`; }
+  for(let y=0;y<=h;y+=40){ s += `<line x1="0" y1="${y}" x2="${w}" y2="${y}" stroke="#6366F1" stroke-opacity="0.05"/>`; }
+
+  // roads
+  const roadPaths = [
+    `M0,${h*0.3} C${w*0.2},${h*0.25} ${w*0.4},${h*0.4} ${w},${h*0.32}`,
+    `M${w*0.15},0 C${w*0.25},${h*0.3} ${w*0.1},${h*0.6} ${w*0.3},${h}`,
+    `M0,${h*0.75} C${w*0.3},${h*0.7} ${w*0.6},${h*0.85} ${w},${h*0.7}`,
+    `M${w*0.65},0 C${w*0.55},${h*0.4} ${w*0.75},${h*0.6} ${w*0.6},${h}`,
+  ];
+  roadPaths.forEach(p=>{ s+= `<path d="${p}" fill="none" stroke="#2b3660" stroke-width="10" stroke-linecap="round"/>`; });
+  roadPaths.forEach(p=>{ s+= `<path d="${p}" fill="none" stroke="#3a4878" stroke-width="2" stroke-dasharray="10 8" stroke-linecap="round"/>`; });
+
+  // risk zones (blobs)
+  const zones = [
+    {cx:w*0.25, cy:h*0.3, r:90, color:'#EF4444', op:0.22},
+    {cx:w*0.62, cy:h*0.22, r:70, color:'#F59E0B', op:0.18},
+    {cx:w*0.78, cy:h*0.55, r:110, color:'#EF4444', op:0.2},
+    {cx:w*0.35, cy:h*0.68, r:80, color:'#F59E0B', op:0.16},
+    {cx:w*0.55, cy:h*0.8, r:60, color:'#10B981', op:0.14},
+  ];
+  zones.forEach(z=>{
+    s += `<circle cx="${z.cx}" cy="${z.cy}" r="${z.r}" fill="${z.color}" opacity="${z.op}"/>`;
+    s += `<circle cx="${z.cx}" cy="${z.cy}" r="${z.r*0.55}" fill="${z.color}" opacity="${z.op*1.4}"/>`;
+  });
+
+  // incident markers
+  const incidents = [
+    {x:w*0.25, y:h*0.3, c:'#EF4444'}, {x:w*0.62, y:h*0.22, c:'#F59E0B'},
+    {x:w*0.78, y:h*0.55, c:'#EF4444'}, {x:w*0.35, y:h*0.68, c:'#F59E0B'},
+    {x:w*0.5, y:h*0.45, c:'#22D3EE'},
+  ];
+  incidents.forEach((m,i)=>{
+    s += `<circle cx="${m.x}" cy="${m.y}" r="14" fill="${m.c}" opacity="0.25"><animate attributeName="r" values="10;20;10" dur="2.4s" repeatCount="indefinite" begin="${i*0.3}s"/></circle>`;
+    s += `<circle cx="${m.x}" cy="${m.y}" r="6" fill="${m.c}" stroke="#0B1020" stroke-width="2"/>`;
+  });
+
+  // response teams
+  const teams = [{x:w*0.45,y:h*0.35},{x:w*0.68,y:h*0.65},{x:w*0.2,y:h*0.55},{x:w*0.85,y:h*0.3}];
+  teams.forEach(t=>{
+    s += `<g transform="translate(${t.x},${t.y})">
+      <rect x="-9" y="-9" width="18" height="18" rx="5" fill="#10B981" opacity="0.9"/>
+      <path d="M-4,0 L0,-4 L4,0 L0,4 Z" fill="#0B1020"/>
+    </g>`;
+  });
+
+  // user location
+  s += `<g transform="translate(${w*0.55},${h*0.5})">
+    <circle r="16" fill="#22D3EE" opacity="0.18"><animate attributeName="r" values="12;22;12" dur="2s" repeatCount="indefinite"/></circle>
+    <circle r="6" fill="#22D3EE" stroke="#fff" stroke-width="1.5"/>
+  </g>`;
+
+  svg.innerHTML = s;
+}
+buildMap('hero-map-svg', 1200, 540);
+buildMap('dash-map-svg', 1000, 560);
+buildMap('zonemap-svg', 1000, 560);
+buildMap('route-svg', 1000, 560);
+
+/* ---------- LIVE FEED ---------- */
+const feedData = [
+  {t:'10:22', type:'Fire Alert', loc:'Sector 4, Market St', c:'var(--red)'},
+  {t:'10:25', type:'Medical SOS', loc:'Sector 9, Riverside', c:'var(--red)'},
+  {t:'10:31', type:'Route Updated', loc:'Citizen #4471', c:'var(--indigo)'},
+  {t:'10:35', type:'Security Alert', loc:'Sector 7, Central Plaza', c:'var(--amber)'},
+  {t:'10:41', type:'Team Dispatched', loc:'Echo-3 → Sector 9', c:'var(--emerald)'},
+  {t:'10:47', type:'Incident Resolved', loc:'INC-5501, Sector 7', c:'var(--emerald)'},
+  {t:'10:52', type:'Flood Risk Rising', loc:'Sector 1, Old Canal', c:'var(--amber)'},
+  {t:'10:58', type:'New Report Filed', loc:'Citizen #2290', c:'var(--indigo)'},
+];
+const feedList = document.getElementById('feed-list');
+feedList.innerHTML = feedData.map(f=>`
+  <div class="feed-item">
+    <div class="feed-time mono">${f.t}</div>
+    <div class="feed-dot-wrap"><span class="feed-dot" style="background:${f.c}"></span></div>
+    <div class="feed-text"><strong>${f.type}</strong><span>${f.loc}</span></div>
+  </div>`).join('');
+
+/* ---------- CHARTS ---------- */
+Chart.defaults.color = '#9AA5C8';
+Chart.defaults.font.family = "Inter";
+Chart.defaults.borderColor = 'rgba(148,163,255,0.08)';
+
+function gridOpt(){ return { grid:{color:'rgba(148,163,255,0.07)'}, ticks:{color:'#7C87B0'} }; }
+
+new Chart(document.getElementById('chart-trend'), {
+  type:'line',
+  data:{
+    labels:['W1','W2','W3','W4','W5','W6'],
+    datasets:[
+      {label:'Reported', data:[22,28,24,30,26,34], borderColor:'#6366F1', backgroundColor:'rgba(99,102,241,0.15)', fill:true, tension:0.4},
+      {label:'Resolved', data:[18,24,22,27,25,31], borderColor:'#22D3EE', backgroundColor:'rgba(34,211,238,0.1)', fill:true, tension:0.4},
+    ]
+  },
+  options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{color:'#9AA5C8'}}}, scales:{x:gridOpt(), y:gridOpt()}}
+});
+
+new Chart(document.getElementById('chart-risk'), {
+  type:'doughnut',
+  data:{
+    labels:['Critical','Elevated','Moderate','Stable'],
+    datasets:[{data:[8,12,18,24], backgroundColor:['#EF4444','#F59E0B','#6366F1','#10B981'], borderColor:'#131A2E', borderWidth:3}]
+  },
+  options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{color:'#9AA5C8'}}}}
+});
+
+new Chart(document.getElementById('chart-response'), {
+  type:'bar',
+  data:{
+    labels:['S1','S2','S3','S4','S5','S6','S7','S8'],
+    datasets:[{label:'Avg minutes', data:[6.2,8.1,5.4,9.3,4.8,7.2,5.9,6.6], backgroundColor:'#818CF8', borderRadius:6}]
+  },
+  options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:gridOpt(), y:gridOpt()}}
+});
+
+new Chart(document.getElementById('chart-zone'), {
+  type:'radar',
+  data:{
+    labels:['Fire','Medical','Security','Flood','Traffic','Other'],
+    datasets:[{label:'Incidents', data:[18,24,15,9,21,7], backgroundColor:'rgba(34,211,238,0.15)', borderColor:'#22D3EE', pointBackgroundColor:'#22D3EE'}]
+  },
+  options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{r:{grid:{color:'rgba(148,163,255,0.1)'}, angleLines:{color:'rgba(148,163,255,0.1)'}, pointLabels:{color:'#9AA5C8'}, ticks:{display:false}}}}
+});
+
+/* layer toggle visuals */
+document.querySelectorAll('.layer-chip').forEach(chip=>{
+  chip.addEventListener('click', ()=> chip.classList.toggle('on'));
+});
+</script>
+</body>
+</html>
