@@ -1,0 +1,387 @@
+## Step 1: Open the Website
+
+Open APSAS using the deployed application link:
+
+**https://your-apsas-url.vercel.app/**
+
+You will be redirected to the APSAS landing page.
+
+---
+
+## Step 2: Explore the Homepage
+
+The homepage contains:
+
+* Navigation Bar
+* Hero Section
+* Emergency Services Overview
+* Key Features Section
+* AI Safety Platform Overview
+* About APSAS Section
+* Contact Section
+* Login Button
+* Citizen Registration Button
+
+Read the information to understand the purpose of the public safety platform.
+
+---
+
+## Step 3: Login or Register
+
+Users can access APSAS in different ways.
+
+### Citizen
+
+Click **Sign Up**.
+
+Fill in:
+
+* Full Name
+* Email Address
+* Phone Number
+* Password
+* Confirm Password
+
+Click **Create Account**.
+
+After registration, login using your credentials.
+
+---
+
+### Administrator
+
+Click **Login as Staff**.
+
+Select:
+
+**Administrator Login**
+
+Enter:
+
+* Administrator Email
+* Administrator Password
+
+After successful authentication, the Administrator Dashboard opens.
+
+---
+
+### Operator
+
+Click **Login as Staff**.
+
+Select:
+
+**Operator Login**
+
+Enter:
+
+* Operator Email
+* Operator Password
+
+After successful authentication, the Operator Dashboard opens.
+
+---
+
+## Step 4: Citizen Dashboard
+
+After login, the Citizen Dashboard displays:
+
+* Dashboard Overview
+* Report Incident
+* My Incidents
+* SOS Center
+* Notifications
+* Profile
+* Settings
+
+Users can monitor their emergency requests and notifications.
+
+---
+
+## Step 5: Report an Incident
+
+Click **Report Incident**.
+
+Choose one of the available categories:
+
+* Road Accident
+* Traffic Issue
+* Fire Emergency
+* Medical Emergency
+
+Fill in:
+
+* Incident Category
+* Description
+* Live Location
+* Upload Photo
+* Additional Details (Optional)
+
+Click **Submit Incident**.
+
+The system will:
+
+* Validate the information
+* Capture GPS location
+* Store uploaded evidence
+* Generate a unique Incident ID
+* Save the report in the database
+
+A confirmation message will appear after successful submission.
+
+---
+
+## Step 6: View My Incidents
+
+Open **My Incidents**.
+
+Users can view:
+
+* Incident ID
+* Incident Type
+* Date & Time
+* Location
+* Current Status
+* Operator Remarks
+* Last Updated
+
+Possible Status:
+
+* Pending
+* Verified
+* Response Team Assigned
+* Resolved
+* Rejected
+
+---
+
+## Step 7: Trigger Emergency SOS
+
+Open **SOS Center**.
+
+Click the **Emergency SOS** button.
+
+The system will:
+
+* Capture live GPS location
+* Record current timestamp
+* Create an emergency SOS request
+* Notify emergency operators
+* Display confirmation to the citizen
+
+The SOS request immediately appears in the Operator Dashboard.
+
+---
+
+## Step 8: Operator Dashboard
+
+After Operator login, the dashboard provides:
+
+* Active Incidents
+* Active SOS Requests
+* Incident Queue
+* Response Teams
+* Zone Map
+* Notifications
+* Settings
+
+Operators can manage all incoming emergency reports.
+
+---
+
+## Step 9: Manage Incidents
+
+Select an incident from the Incident Queue.
+
+Review:
+
+* Reporter Information
+* Description
+* Uploaded Image
+* Live Location
+* Priority Level
+
+Update:
+
+* Incident Status
+* Priority
+* Operator Remarks
+* Assign Response Team
+
+Save the changes.
+
+Citizens receive updated status notifications automatically.
+
+---
+
+## Step 10: Manage SOS Requests
+
+Open **SOS Requests**.
+
+Operators can:
+
+* Accept SOS
+* Dispatch Response Team
+* Update Response Status
+* Mark Arrival
+* Close Emergency Request
+
+All updates are stored in the database.
+
+---
+
+## Step 11: Interactive Map
+
+Open **Zone Map**.
+
+The map displays:
+
+* Active Incidents
+* Active SOS Alerts
+* Emergency Response Teams
+* High Risk Zones
+
+Selecting a marker displays complete incident information.
+
+---
+
+## Step 12: Administrator Dashboard
+
+Login as Administrator.
+
+The dashboard provides:
+
+* Total Citizens
+* Total Operators
+* Total Incidents
+* Active Incidents
+* Active SOS Requests
+* Analytics
+* User Management
+* Notifications
+* System Monitoring
+
+Administrators can monitor the entire platform.
+
+---
+
+## Step 13: User Management
+
+Open **User Management**.
+
+Administrator can:
+
+* View Users
+* Activate Users
+* Suspend Users
+* Delete Users
+* Search Users
+* Filter by Role
+
+Changes are reflected immediately in the system.
+
+---
+
+## Step 14: Analytics Dashboard
+
+Open **Analytics**.
+
+The dashboard displays:
+
+* Incident Statistics
+* Emergency Trends
+* Daily Reports
+* Monthly Reports
+* Response Time Analysis
+* Incident Categories
+* Zone Risk Analysis
+
+Charts are generated using live database information.
+
+---
+
+## Step 15: Notification Center
+
+Every user has access to the Notification Center.
+
+Notifications include:
+
+Citizen:
+
+* Incident Submitted
+* Incident Verified
+* Response Team Assigned
+* Incident Resolved
+* SOS Confirmation
+
+Operator:
+
+* New Incident
+* New SOS Request
+* Admin Announcements
+
+Administrator:
+
+* System Alerts
+* Operator Activity
+* User Registration
+* Critical Emergencies
+
+Users can:
+
+* View Notifications
+* Mark as Read
+* Delete Notifications
+
+---
+
+# How APSAS Works
+
+### Step 1
+
+Citizen registers or logs into the system.
+
+### Step 2
+
+Citizen reports an emergency or triggers SOS.
+
+### Step 3
+
+The system stores the request in the database.
+
+### Step 4
+
+Operators receive the incident instantly.
+
+### Step 5
+
+Operators verify, manage, and update the emergency.
+
+### Step 6
+
+Citizens receive real-time status updates.
+
+### Step 7
+
+Administrators monitor operations, analytics, and overall system performance.
+
+---
+
+# Supported Browsers
+
+* Google Chrome
+* Microsoft Edge
+* Mozilla Firefox
+* Brave Browser
+
+---
+
+# Tips for Best Results
+
+* Enable location permissions before reporting emergencies.
+* Upload clear images whenever possible.
+* Provide accurate incident descriptions.
+* Keep internet connectivity enabled for real-time updates.
+* Regularly check notifications for status updates.
+* Use the SOS feature only during genuine emergencies.
+* Ensure GPS is enabled for accurate location tracking.
