@@ -1,0 +1,164 @@
+APSAS/
+│
+├── backend/
+│   │
+│   ├── main.py
+│   ├── auth.py
+│   ├── config.py
+│   ├── database.py
+│   ├── models.py
+│   ├── schemas.py
+│   ├── migrations.py
+│   ├── websocket_manager.py
+│   ├── email_service.py
+│   │
+│   ├── routers/
+│   │   ├── auth_router.py
+│   │   ├── user_router.py
+│   │   ├── incident_router.py
+│   │   ├── sos_router.py
+│   │   ├── analytics_router.py
+│   │   ├── notification_router.py
+│   │   ├── team_router.py
+│   │   ├── zone_router.py
+│   │   └── pdf_router.py
+│   │
+│   ├── utils/
+│   │   ├── helpers.py
+│   │   ├── validators.py
+│   │   ├── location.py
+│   │   ├── notifications.py
+│   │   └── security.py
+│   │
+│   ├── uploads/
+│   │   ├── incidents/
+│   │   ├── evidence/
+│   │   └── profile_images/
+│   │
+│   └── __pycache__/
+│
+├── frontend/
+│   │
+│   ├── public/
+│   │   ├── favicon.svg
+│   │   ├── icons.svg
+│   │   └── logo.png
+│   │
+│   ├── src/
+│   │   │
+│   │   ├── assets/
+│   │   │   ├── hero.png
+│   │   │   ├── logo.png
+│   │   │   ├── map.png
+│   │   │   └── emergency.png
+│   │   │
+│   │   ├── components/
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   ├── Chatbot.jsx
+│   │   │   ├── CameraUpload.jsx
+│   │   │   ├── InteractiveMap.jsx
+│   │   │   ├── RoutePlanner.jsx
+│   │   │   ├── AnalyticsCharts.jsx
+│   │   │   ├── NotificationPanel.jsx
+│   │   │   ├── SOSButton.jsx
+│   │   │   ├── IncidentCard.jsx
+│   │   │   ├── UserTable.jsx
+│   │   │   └── LoadingSpinner.jsx
+│   │   │
+│   │   ├── context/
+│   │   │   └── AuthContext.jsx
+│   │   │
+│   │   ├── pages/
+│   │   │   ├── LandingPage.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── ForgotPassword.jsx
+│   │   │   │
+│   │   │   ├── citizen/
+│   │   │   │   ├── Dashboard.jsx
+│   │   │   │   ├── ReportIncident.jsx
+│   │   │   │   ├── MyIncidents.jsx
+│   │   │   │   ├── SOSCenter.jsx
+│   │   │   │   ├── Notifications.jsx
+│   │   │   │   ├── Profile.jsx
+│   │   │   │   └── Settings.jsx
+│   │   │   │
+│   │   │   ├── operator/
+│   │   │   │   ├── Dashboard.jsx
+│   │   │   │   ├── IncidentQueue.jsx
+│   │   │   │   ├── SOSRequests.jsx
+│   │   │   │   ├── DispatchCenter.jsx
+│   │   │   │   ├── ZoneMap.jsx
+│   │   │   │   ├── ResponseTeams.jsx
+│   │   │   │   ├── Notifications.jsx
+│   │   │   │   └── Settings.jsx
+│   │   │   │
+│   │   │   └── admin/
+│   │   │       ├── Dashboard.jsx
+│   │   │       ├── UserManagement.jsx
+│   │   │       ├── Analytics.jsx
+│   │   │       ├── IncidentMonitoring.jsx
+│   │   │       ├── ZoneManagement.jsx
+│   │   │       ├── SystemMonitoring.jsx
+│   │   │       ├── Notifications.jsx
+│   │   │       ├── AuditLogs.jsx
+│   │   │       └── Settings.jsx
+│   │   │
+│   │   ├── services/
+│   │   │   ├── api.js
+│   │   │   ├── authService.js
+│   │   │   ├── incidentService.js
+│   │   │   ├── notificationService.js
+│   │   │   ├── sosService.js
+│   │   │   └── analyticsService.js
+│   │   │
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   ├── App.css
+│   │   └── index.css
+│   │
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── vite.config.js
+│   ├── tailwind.config.js
+│   ├── postcss.config.js
+│   ├── eslint.config.js
+│   └── README.md
+│
+├── database/
+│   └── seed_db.py
+│
+├── docs/
+│   └── setup_instructions.md
+│
+├── ml_models/
+│   ├── chatbot.py
+│   ├── image_analyzer.py
+│   ├── priority_classifier.py
+│   ├── risk_predictor.py
+│   ├── voice_analyzer.py
+│   └── risk_model.pkl
+│
+├── screenshots/
+│   ├── .gitkeep
+│   ├── landing-page.png
+│   ├── login-page.png
+│   ├── citizen-dashboard.png
+│   ├── report-incident.png
+│   ├── sos-center.png
+│   ├── operator-dashboard.png
+│   ├── admin-dashboard.png
+│   ├── analytics.png
+│   ├── notifications.png
+│   └── zone-map.png
+│
+├── APSAS.html
+├── apsas.db
+├── email_notifications.log
+├── requirements.txt
+├── .env
+├── .gitignore
+├── LICENSE
+└── README.md
+
